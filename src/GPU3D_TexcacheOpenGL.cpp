@@ -33,6 +33,12 @@ HDTexture::ReplaceTexture(
     height,
     uploadData);
 
+HDTexture::DumpTexture(
+    key,
+    width,
+    height,
+    uploadData);
+
     glTexSubImage3D(GL_TEXTURE_2D_ARRAY,
         0, 0, 0, layer,
         width, height, 1,
