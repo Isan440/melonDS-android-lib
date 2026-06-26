@@ -1,10 +1,23 @@
 #include "HDTexture.h"
 
 #include <string>
+#include <filesystem>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
 
 std::string HDTexture::RootPath;
 bool HDTexture::Initialized = false;
 static bool DumpEnabled = false;
+static std::string MakeTextureName(uint64_t key)
+{
+    std::stringstream ss;
+    ss << std::hex
+       << std::setw(16)
+       << std::setfill('0')
+       << key;
+    return ss.str();
+}
 
 void HDTexture::Initialize(const char* rootPath)
 {
@@ -52,8 +65,32 @@ void HDTexture::DumpTexture(
     uint32_t height,
     const void* pixels)
 {
-    (void)key;
-    (void)width;
-    (void)height;
-    (void)pixels;
+    if (!DumpEnabled)
+        return;
+
+    std::filesystem::path dumpDir =
+        std::filesystem::path(RootPath) / "dump";
+
+    std::filesystem::create_directories(dumpDir);
+
+    std::string fileName =
+        MakeTextureName(key) + ".bin";
+
+    std::filesystem::path outFile =
+        dumpDir / fileName;
+
+    if (std::filesystem::exists(outFile))
+        return;
+
+    std::ofstream out(outFile, std::ios::binary);
+
+    if (!out)
+        return;
+
+    out.write(
+        reinterpret_cast<const char*>(pixels),
+        width * height * 4);
+
+    out.close();
 }
+
