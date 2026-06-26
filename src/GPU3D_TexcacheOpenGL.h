@@ -14,7 +14,7 @@ class TexcacheOpenGLLoader
 {
 public:
     GLuint GenerateTexture(u32 width, u32 height, u32 layers);
-    void UploadTexture(GLuint handle, u32 width, u32 height, u32 layer, void* data);
+    void UploadTexture(GLuint handle, u32 width, u32 height, u32 layer, void* data, u64 key);
     void DeleteTexture(GLuint handle);
 };
 

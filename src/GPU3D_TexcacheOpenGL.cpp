@@ -1,4 +1,5 @@
 #include "GPU3D_TexcacheOpenGL.h"
+#include "HDTexture.h"
 
 namespace melonDS
 {
@@ -12,8 +13,16 @@ GLuint TexcacheOpenGLLoader::GenerateTexture(u32 width, u32 height, u32 layers)
     return texarray;
 }
 
-void TexcacheOpenGLLoader::UploadTexture(GLuint handle, u32 width, u32 height, u32 layer, void* data)
+void TexcacheOpenGLLoader::UploadTexture(GLuint handle, u32 width, u32 height, u32 layer, void* data, u64 key)
 {
+    // HD Texture hook
+static bool initialized = false;
+
+if (!initialized)
+{
+    HDTexture::Initialize("/sdcard/Android/data/com.magnum.melonds/files/textures");
+    initialized = true;
+}
     glBindTexture(GL_TEXTURE_2D_ARRAY, handle);
     glTexSubImage3D(GL_TEXTURE_2D_ARRAY,
         0, 0, 0, layer,
