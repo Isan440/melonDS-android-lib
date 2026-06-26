@@ -24,10 +24,19 @@ if (!initialized)
     initialized = true;
 }
     glBindTexture(GL_TEXTURE_2D_ARRAY, handle);
+
+void* uploadData = data;
+
+HDTexture::ReplaceTexture(
+    key,
+    width,
+    height,
+    uploadData);
+
     glTexSubImage3D(GL_TEXTURE_2D_ARRAY,
         0, 0, 0, layer,
         width, height, 1,
-        GL_RGBA_INTEGER, GL_UNSIGNED_BYTE, data);
+        GL_RGBA_INTEGER, GL_UNSIGNED_BYTE, uploadData);
 }
 
 void TexcacheOpenGLLoader::DeleteTexture(GLuint handle)
