@@ -20,7 +20,7 @@ static bool initialized = false;
 
 if (!initialized)
 {
-    HDTexture::Initialize("/sdcard/Android/data/me.magnum.melonds.nightly.dev/files/textures");
+    HDTexture::Initialize(HDTexture::Initialize("/storage/emulated/0/melonDS");
     initialized = true;
 }
     glBindTexture(GL_TEXTURE_2D_ARRAY, handle);
