@@ -40,6 +40,12 @@ void HDTexture::Initialize(const char* rootPath)
 
     RootPath = rootPath;
 
+    std::filesystem::create_directories(
+    std::filesystem::path(RootPath) / "load");
+
+    std::filesystem::create_directories(
+    std::filesystem::path(RootPath) / "dump");
+
     DebugLog(std::string("Initialize: ") + rootPath); 
 
    Initialized = true;
