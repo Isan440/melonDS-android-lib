@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "GPU.h"
+#include "HDTexture.h"
 
 #include <assert.h>
 #include <unordered_map>
@@ -273,6 +274,12 @@ public:
         freeTextures.pop_back();
 
         entry.Texture = storagePlace;
+
+        HDTexture::ReplaceTexture(
+            key,
+            width,
+            height,
+            (void*&)DecodingBuffer);
 
         TexLoader.UploadTexture(storagePlace.TextureID, width, height, storagePlace.Layer, DecodingBuffer, key);
         //printf("using storage place %d %d | %d %d (%d)\n", width, height, storagePlace.TexArrayIdx, storagePlace.LayerIdx, array.ImageDescriptor);
