@@ -1,5 +1,6 @@
 #include "HDTexture.h"
 
+#include <cstdint>
 #include <string>
 #include <filesystem>
 #include <fstream>
@@ -55,14 +56,38 @@ bool HDTexture::ReplaceTexture(
     uint32_t height,
     void*& pixels)
 {
-    (void)key;
-    (void)width;
-    (void)height;
-    (void)pixels;
+        if (!Initialized)
+        return false;
 
-    // Belum ada replacement.
-    // Untuk saat ini selalu gunakan texture asli.
-    return false;
+    std::filesystem::path textureFile =
+        std::filesystem::path(RootPath) /
+        "load" /
+        (MakeTextureName(key) + ".bin");
+
+    if (!std::filesystem::exists(textureFile))
+        return false;
+
+    std::ifstream in(textureFile, std::ios::binary);
+    if (!in)
+        return false;
+
+    size_t size = width * height * 4;
+
+    uint8_t* newPixels = new uint8_t[size];
+
+    in.read(reinterpret_cast<char*>(newPixels), size);
+
+    if (!in)
+    {
+        delete[] newPixels;
+        return false;
+    }
+
+    pixels = newPixels;
+
+    DebugLog("Texture replaced: " + textureFile.string());
+
+    return true;
 }
 
 void HDTexture::SetDumpEnabled(bool enabled)
