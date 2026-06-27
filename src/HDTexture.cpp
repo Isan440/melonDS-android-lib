@@ -5,6 +5,19 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <android/log.h>
+
+static void DebugLog(const std::string& msg)
+{
+    std::ofstream log(
+        "/sdcard/Android/data/me.magnum.melonds.nightly.dev/files/debug.log",
+        std::ios::app);
+
+    if (!log)
+        return;
+
+    log << msg << std::endl;
+}
 
 std::string HDTexture::RootPath;
 bool HDTexture::Initialized = false;
@@ -25,7 +38,10 @@ void HDTexture::Initialize(const char* rootPath)
         return;
 
     RootPath = rootPath;
-    Initialized = true;
+
+    DebugLog(std::string("Initialize: ") + rootPath); 
+
+   Initialized = true;
 }
 
 bool HDTexture::IsEnabled()
@@ -68,10 +84,14 @@ void HDTexture::DumpTexture(
     if (!DumpEnabled)
         return;
 
+    DebugLog("DumpTexture() called");
+
     std::filesystem::path dumpDir =
         std::filesystem::path(RootPath) / "dump";
 
     std::filesystem::create_directories(dumpDir);
+
+    DebugLog("Directory ready");
 
     std::string fileName =
         MakeTextureName(key) + ".bin";
@@ -80,17 +100,32 @@ void HDTexture::DumpTexture(
         dumpDir / fileName;
 
     if (std::filesystem::exists(outFile))
-        return;
+
+{
+    DebugLog("Already exists: " + fileName);
+    return;
+}
+
 
     std::ofstream out(outFile, std::ios::binary);
 
     if (!out)
-        return;
+
+{
+       DebugLog("FAILED opening file");
+       return;
+}
+
+       DebugLog("Writing texture...");
 
     out.write(
         reinterpret_cast<const char*>(pixels),
         width * height * 4);
 
     out.close();
+
+    DebugLog("Texture dumped: " + fileName);
+
 }
+
 
