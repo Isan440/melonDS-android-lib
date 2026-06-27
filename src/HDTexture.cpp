@@ -56,7 +56,10 @@ bool HDTexture::ReplaceTexture(
     uint32_t height,
     void*& pixels)
 {
-        if (!Initialized)
+    std::string fileName = MakeTextureName(key) + ".bin";
+    DebugLog("Looking for: " + fileName);
+
+    if (!Initialized)
         return false;
 
     std::filesystem::path textureFile =
@@ -65,7 +68,10 @@ bool HDTexture::ReplaceTexture(
         (MakeTextureName(key) + ".bin");
 
     if (!std::filesystem::exists(textureFile))
-        return false;
+{
+    DebugLog("Not found: " + fileName);
+    return false;
+}
 
     std::ifstream in(textureFile, std::ios::binary);
     if (!in)
@@ -86,6 +92,7 @@ bool HDTexture::ReplaceTexture(
     pixels = newPixels;
 
     DebugLog("Texture replaced: " + textureFile.string());
+    DebugLog("Found: " + fileName);
 
     return true;
 }
