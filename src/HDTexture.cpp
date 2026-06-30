@@ -41,10 +41,14 @@ void HDTexture::Initialize(const char* rootPath)
     RootPath = rootPath;
 
     std::filesystem::create_directories(
-    std::filesystem::path(RootPath) / "load");
+        std::filesystem::path(RootPath)
+        / "textures"
+        / "replacements");
 
     std::filesystem::create_directories(
-    std::filesystem::path(RootPath) / "dump");
+        std::filesystem::path(RootPath)
+        / "textures"
+        / "dumps");
 
     DebugLog(std::string("Initialize: ") + rootPath); 
 
@@ -69,9 +73,10 @@ bool HDTexture::ReplaceTexture(
         return false;
 
     std::filesystem::path textureFile =
-        std::filesystem::path(RootPath) /
-        "load" /
-        (MakeTextureName(key) + ".bin");
+        std::filesystem::path(RootPath)
+        / "textures"
+        / "replacements"
+        / (MakeTextureName(key) + ".bin");
 
     if (!std::filesystem::exists(textureFile))
 {
@@ -125,7 +130,9 @@ void HDTexture::DumpTexture(
     DebugLog("DumpTexture() called");
 
     std::filesystem::path dumpDir =
-        std::filesystem::path(RootPath) / "dump";
+        std::filesystem::path(RootPath)
+        / "textures"
+        / "dumps";
 
     std::filesystem::create_directories(dumpDir);
 
